@@ -1,51 +1,32 @@
-// src/components/GalleryWithLightbox.jsx
-import React, { useState } from "react";
-import Lightbox from "react-image-lightbox";
-import "react-image-lightbox/style.css";
-
-const images = ["/gallery/gym1.jpg", "/gallery/gym2.jpg"];
+import React from 'react';
 
 const GalleryWithLightbox = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [photoIndex, setPhotoIndex] = useState(0);
+  const images = [
+    '/gallery/gym1.jpg',
+    '/gallery/gym2.jpg',
+    '/gallery/gym1.jpg',
+    '/gallery/gym2.jpg'
+  ];
 
   return (
-    <section id="gallery" className="py-16 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-10 text-blue-600">
-          Gallery
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {images.map((img, index) => (
-            <img
-              key={index}
-              src={img}
-              alt={`Gym ${index + 1}`}
-              className="rounded-xl shadow hover:scale-105 transition-transform duration-300 cursor-pointer"
-              onClick={() => {
-                setPhotoIndex(index);
-                setIsOpen(true);
-              }}
-            />
-          ))}
-        </div>
+    <div className="py-12 px-4 md:px-16 bg-gray-100" id="gallery">
+      <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 text-gray-800">🏋️‍♂️ Gym Gallery</h2>
 
-        {isOpen && (
-          <Lightbox
-            mainSrc={images[photoIndex]}
-            nextSrc={images[(photoIndex + 1) % images.length]}
-            prevSrc={images[(photoIndex + images.length - 1) % images.length]}
-            onCloseRequest={() => setIsOpen(false)}
-            onMovePrevRequest={() =>
-              setPhotoIndex((photoIndex + images.length - 1) % images.length)
-            }
-            onMoveNextRequest={() =>
-              setPhotoIndex((photoIndex + 1) % images.length)
-            }
+      <p className="text-center text-gray-500 mb-4">
+        Lightbox feature temporarily removed for deployment
+      </p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {images.map((src, index) => (
+          <img
+            key={index}
+            src={src}
+            alt={`Gym Image ${index + 1}`}
+            className="rounded-xl shadow-md hover:scale-105 transition-transform duration-300"
           />
-        )}
+        ))}
       </div>
-    </section>
+    </div>
   );
 };
 
