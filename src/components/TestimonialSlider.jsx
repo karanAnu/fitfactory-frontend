@@ -22,10 +22,11 @@ const testimonials = [
 
 export default function TestimonialSlider() {
   return (
-    <section id="testimonials" className="py-20 bg-gray-50">
-      <h2 className="text-4xl font-bold text-center text-blue-600 mb-10">
+    <section id="testimonials" className="py-20 bg-black text-white">
+      <h2 className="text-3xl font-bold text-center text-yellow-400 mb-10">
         What Our Members Say
       </h2>
+
       <div className="max-w-4xl mx-auto px-4">
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
@@ -37,9 +38,9 @@ export default function TestimonialSlider() {
         >
           {testimonials.map((t, index) => (
             <SwiperSlide key={index}>
-              <div className="bg-white p-8 shadow-md rounded-xl text-center">
-                <p className="text-lg italic text-gray-700 mb-6">“{t.quote}”</p>
-                <h4 className="text-blue-600 font-semibold">— {t.name}</h4>
+              <div className="bg-gray-800 border-t-4 border-yellow-400 p-8 shadow-lg rounded-xl text-center transition-all">
+                <p className="text-lg italic text-gray-300 mb-6">“{t.quote}”</p>
+                <h4 className="text-yellow-400 font-semibold">— {t.name}</h4>
               </div>
             </SwiperSlide>
           ))}

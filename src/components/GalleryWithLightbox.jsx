@@ -1,33 +1,40 @@
-import React from 'react';
+// src/components/GalleryWithLightbox.jsx
+import { useState } from "react";
+import gym1 from "../assets/gymPhoto2.jpeg";
+import gym2 from "../assets/gymPhoto1.jpeg";
+import gym3 from "../assets/gymPhoto3.jpeg";
 
-const GalleryWithLightbox = () => {
-  const images = [
-    '/gallery/gym1.jpg',
-    '/gallery/gym2.jpg',
-    '/gallery/gym1.jpg',
-    '/gallery/gym2.jpg'
-  ];
+const images = [gym1, gym2, gym3]; // ✅ imported images used here
+
+export default function GalleryWithLightbox() {
+  const [selectedImg, setSelectedImg] = useState(null);
 
   return (
-    <div className="py-12 px-4 md:px-16 bg-gray-100" id="gallery">
-      <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 text-gray-800">🏋️‍♂️ Gym Gallery</h2>
-
-      <p className="text-center text-gray-500 mb-4">
-        Lightbox feature temporarily removed for deployment
-      </p>
-
+    <div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {images.map((src, index) => (
+        {images.map((img, idx) => (
           <img
-            key={index}
-            src={src}
-            alt={`Gym Image ${index + 1}`}
-            className="rounded-xl shadow-md hover:scale-105 transition-transform duration-300"
+            key={idx}
+            src={img}
+            alt={`Gallery ${idx + 1}`}
+            className="rounded-lg shadow-lg border border-gray-700 hover:scale-105 transition duration-300 cursor-pointer"
+            onClick={() => setSelectedImg(img)}
           />
         ))}
       </div>
+
+      {selectedImg && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50"
+          onClick={() => setSelectedImg(null)}
+        >
+          <img
+            src={selectedImg}
+            alt="Zoom"
+            className="max-w-full max-h-full rounded-lg shadow-xl"
+          />
+        </div>
+      )}
     </div>
   );
-};
-
-export default GalleryWithLightbox;
+}

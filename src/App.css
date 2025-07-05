@@ -40,3 +40,9 @@
 .read-the-docs {
   color: #888;
 }
+/* App.css */
+body {
+  background-color: #000000;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+}

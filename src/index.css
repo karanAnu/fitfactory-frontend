@@ -2,7 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Enable smooth scrolling */
+/* 🌐 Smooth scrolling for internal anchor links */
 html {
   scroll-behavior: smooth;
+}
+
+/* 🟨 Custom Animations */
+@keyframes slide-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.8s ease forwards;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.8s ease forwards;
+}
+
+/* 🌑 Dark background and yellow theme overrides */
+body {
+  @apply bg-black text-white;
+}
+
+input,
+textarea {
+  @apply text-black;
 }

@@ -30,13 +30,14 @@ const trainers = [
 export default function TrainerSlider() {
   return (
     <div className="max-w-6xl mx-auto px-4">
-      <h2 className="text-4xl font-bold text-center mb-10 text-blue-600">
+      {/* <h2 className="text-3xl font-bold text-center text-yellow-400 mb-10">
         Meet Our Trainers
-      </h2>
+      </h2> */}
+
       <Swiper
         modules={[Navigation, Autoplay]}
         navigation
-        autoplay={{ delay: 3000 }}
+        autoplay={{ delay: 3500 }}
         spaceBetween={30}
         breakpoints={{
           640: { slidesPerView: 1 },
@@ -46,16 +47,16 @@ export default function TrainerSlider() {
       >
         {trainers.map((trainer, index) => (
           <SwiperSlide key={index}>
-            <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg text-center transition-all">
-              <div className="w-full h-64 flex items-center justify-center overflow-hidden rounded-lg mb-4 bg-gray-100">
+            <div className="bg-gray-900 text-white p-6 rounded-xl shadow-lg hover:shadow-yellow-400 transition-all text-center">
+              <div className="w-full h-64 flex items-center justify-center overflow-hidden rounded-lg mb-4 bg-gray-800">
                 <img
                   src={trainer.image}
                   alt={trainer.name}
-                  className="h-full object-contain"
+                  className="h-full object-cover"
                 />
               </div>
-              <h3 className="text-xl font-semibold">{trainer.name}</h3>
-              <p className="text-gray-600">{trainer.role}</p>
+              <h3 className="text-xl font-bold text-yellow-400 mb-1">{trainer.name}</h3>
+              <p className="text-gray-300 text-sm">{trainer.role}</p>
             </div>
           </SwiperSlide>
         ))}

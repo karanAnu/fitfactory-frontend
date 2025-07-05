@@ -1,100 +1,191 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
+import logo from "../assets/logo.png";
+import isDevMode from "../config";
 
-export default function Navbar() {
+export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
+  const [activeSection, setActiveSection] = useState("#home");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const forcedLogin = isDevMode ? true : isLoggedIn;
 
   const navLinks = [
     { name: "Home", href: "#home" },
-    { name: "Plans", href: "#plans" },
+    { name: "Plans", href: "#plans", scrollToHome: true }, // ✅ ScrollToHome added
     { name: "Trainers", href: "#trainers" },
-    { name: "Contact", href: "#contact" },
+    { name: "Gallery", href: "#gallery" },
+    { name: "Blog", href: "/blogs" }, // ✅ Route to blog page
+    { name: "Tracker", href: "/tracker" },
   ];
 
-  const handleScroll = () => {
-    const scrollPosition = window.scrollY + 200;
-    for (const link of navLinks) {
-      const section = document.querySelector(link.href);
-      if (section && section.offsetTop <= scrollPosition) {
-        setActiveSection(link.href);
-      }
-    }
-  };
-
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 200;
+      for (const link of navLinks) {
+        if (link.href.startsWith("#")) {
+          const section = document.querySelector(link.href);
+          if (section && section.offsetTop <= scrollPosition) {
+            setActiveSection(link.href);
+          }
+        }
+      }
+    };
 
-  const scrollToSection = (e, href) => {
+    if (location.pathname === "/home") {
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }
+  }, [location.pathname]);
+
+  const handleClick = (e, href, scrollToHome = false) => {
     e.preventDefault();
-    const target = document.querySelector(href);
-    if (target) {
-      window.scrollTo({
-        top: target.offsetTop - 70,
-        behavior: "smooth",
-      });
+
+    if (href.startsWith("#")) {
+      if (location.pathname === "/home") {
+        const section = document.querySelector(href);
+        if (section) {
+          setTimeout(() => {
+            section.scrollIntoView({ behavior: "smooth" });
+          }, 0);
+        }
+      } else if (scrollToHome) {
+        navigate(`/home?scrollTo=${href.substring(1)}`);
+      }
+      setMenuOpen(false);
+    } else {
+      navigate(href);
       setMenuOpen(false);
     }
   };
 
+  const isActive = (href) => {
+    if (href.startsWith("#")) return location.pathname === "/home" && activeSection === href;
+    return location.pathname === href;
+  };
+
+  const showLinks = forcedLogin;
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
+  const showAuthButtons = !forcedLogin && !isDevMode;
+
   return (
-    <nav className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <a href="/" className="text-2xl font-bold text-blue-600">FitFactory</a>
+    <nav className="bg-black text-white shadow-md fixed top-0 left-0 w-full z-50">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+        <Link to={forcedLogin ? "/home" : "/"} className="flex items-center gap-2">
+          <img
+            src={logo}
+            alt="FitFactory"
+            className={`${
+              isAuthPage ? "w-14 h-14" : "w-10 h-10"
+            } transition-transform duration-700 ease-in-out`}
+          />
+          {!isAuthPage && (
+            <span className="ml-1 text-xl font-extrabold text-yellow-400 tracking-wider hidden sm:block">
+              FitFactory
+            </span>
+          )}
+        </Link>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex gap-6 items-center">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={(e) => scrollToSection(e, link.href)}
-              className={`relative group font-medium transition 
-                ${activeSection === link.href ? "text-blue-600" : "text-gray-700"}`
-              }
+        {/* Desktop Navigation */}
+        {showLinks && (
+          <div className="hidden md:flex gap-6 items-center">
+            {navLinks.map((link) =>
+              link.href.startsWith("#") ? (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={(e) => handleClick(e, link.href, link.scrollToHome)}
+                  className={`relative group font-semibold text-[18px] transition duration-300 ${
+                    isActive(link.href) ? "text-yellow-400" : "text-white"
+                  } hover:text-yellow-400`}
+                >
+                  {link.name}
+                  <span
+                    className={`absolute left-0 -bottom-1 h-[2px] w-0 bg-yellow-400 transition-all duration-300 group-hover:w-full ${
+                      isActive(link.href) ? "w-full" : ""
+                    }`}
+                  />
+                </a>
+              ) : (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className={`relative group font-semibold text-[18px] transition duration-300 ${
+                    isActive(link.href) ? "text-yellow-400" : "text-white"
+                  } hover:text-yellow-400`}
+                >
+                  {link.name}
+                  <span
+                    className={`absolute left-0 -bottom-1 h-[2px] w-0 bg-yellow-400 transition-all duration-300 group-hover:w-full ${
+                      isActive(link.href) ? "w-full" : ""
+                    }`}
+                  />
+                </Link>
+              )
+            )}
+            <button
+              onClick={() => setIsLoggedIn(false)}
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-4"
             >
-              {link.name}
-              <span className={`absolute left-0 -bottom-1 h-[2px] w-0 bg-blue-600 transition-all duration-300 
-                group-hover:w-full origin-right 
-                ${activeSection === link.href ? "w-full" : ""}`}
-              ></span>
-            </a>
-          ))}
-        </div>
+              Logout
+            </button>
+          </div>
+        )}
 
-        {/* Desktop Buttons */}
-        <div className="hidden md:flex gap-4 items-center">
-          <a href="/login" className="text-gray-700 hover:text-blue-600">Login</a>
-          <a href="/signup" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Sign Up</a>
-        </div>
-
-        {/* Mobile Menu Button */}
+        {/* Mobile Toggle */}
         <div className="md:hidden">
-          <button onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {showLinks && (
+            <button onClick={() => setMenuOpen(!menuOpen)}>
+              {menuOpen ? (
+                <X size={24} className="text-yellow-400" />
+              ) : (
+                <Menu size={24} className="text-yellow-400" />
+              )}
+            </button>
+          )}
         </div>
       </div>
 
       {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="md:hidden bg-white px-6 pb-6">
+      {menuOpen && showLinks && (
+        <div className="md:hidden bg-black px-6 pb-6">
           <div className="flex flex-col gap-4 mt-4">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={(e) => scrollToSection(e, link.href)}
-                className={`font-medium ${activeSection === link.href ? "text-blue-600" : "text-gray-700"}`}
-              >
-                {link.name}
-              </a>
-            ))}
-            <hr className="my-2" />
-            <a href="/login" className="text-gray-700 hover:text-blue-600 font-medium">Login</a>
-            <a href="/signup" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-center">Sign Up</a>
+            {navLinks.map((link) =>
+              link.href.startsWith("#") ? (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={(e) => handleClick(e, link.href, link.scrollToHome)}
+                  className={`font-semibold text-lg ${
+                    isActive(link.href) ? "text-yellow-400" : "text-white"
+                  } hover:text-yellow-400`}
+                >
+                  {link.name}
+                </a>
+              ) : (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`font-semibold text-lg ${
+                    isActive(link.href) ? "text-yellow-400" : "text-white"
+                  } hover:text-yellow-400`}
+                >
+                  {link.name}
+                </Link>
+              )
+            )}
+            <button
+              onClick={() => {
+                setMenuOpen(false);
+                setIsLoggedIn(false);
+              }}
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+            >
+              Logout
+            </button>
           </div>
         </div>
       )}
