@@ -35,8 +35,13 @@ export default function Login({ setIsLoggedIn }) {
       });
 
       if (res.data.success) {
+        const { token, user } = res.data;
+
+        // ✅ Save to localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+
         alert("Login successful ✅");
-        localStorage.setItem("token", res.data.token);
         setIsLoggedIn(true);
         navigate("/home");
       } else {
@@ -87,6 +92,12 @@ export default function Login({ setIsLoggedIn }) {
         </form>
 
         <p className="mt-4 text-sm text-center text-gray-300">
+          <a href="/forgot-password" className="text-yellow-400 underline hover:text-yellow-300">
+            Forgot Password?
+          </a>
+        </p>
+
+        <p className="mt-2 text-sm text-center text-gray-300">
           Don’t have an account?{" "}
           <a href="/signup" className="text-yellow-400 underline hover:text-yellow-300">
             Sign Up

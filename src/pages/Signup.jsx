@@ -34,12 +34,17 @@ export default function Signup() {
     }
 
     try {
-      // ✅ Corrected endpoint
       const response = await axios.post("http://localhost:5000/api/auth/signup", formData);
 
       if (response.data.success) {
         alert("OTP sent to your email ✅");
+
+        // ✅ Save all required data in localStorage
+        localStorage.setItem("pendingName", name);
+        localStorage.setItem("pendingPhone", phone);
         localStorage.setItem("pendingEmail", email);
+        localStorage.setItem("pendingPassword", password);
+
         navigate("/verify-otp");
       } else {
         alert(response.data.message || "Signup failed.");

@@ -162,9 +162,41 @@ function Home() {
           <GalleryWithLightbox />
         </div>
       </section>
+       {/* ✅ Contact Us Section */}
+<section id="contact" className="py-20 bg-gray-900 text-white">
+  <div className="max-w-4xl mx-auto px-4 text-center">
+    <h2 className="text-3xl font-bold text-yellow-400 mb-8">Contact Us</h2>
+    <p className="mb-6 text-gray-300">Have questions or want to join? Fill the form below and we'll get back to you!</p>
+
+    <form className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+      <input
+        type="text"
+        placeholder="Your Name"
+        className="p-3 rounded bg-gray-800 text-white border border-gray-700 focus:outline-yellow-400"
+      />
+      <input
+        type="email"
+        placeholder="Your Email"
+        className="p-3 rounded bg-gray-800 text-white border border-gray-700 focus:outline-yellow-400"
+      />
+      <textarea
+        rows="4"
+        placeholder="Your Message"
+        className="md:col-span-2 p-3 rounded bg-gray-800 text-white border border-gray-700 focus:outline-yellow-400"
+      />
+      <button
+        type="submit"
+        className="md:col-span-2 bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 px-6 rounded shadow-md transition"
+      >
+        Send Message
+      </button>
+    </form>
+  </div>
+</section>
 
       {/* ✅ Blog Section */}
       <BlogSection />
+     
 
       {/* Footer */}
       <footer className="bg-black text-yellow-400 py-10 text-center">

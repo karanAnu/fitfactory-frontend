@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import logo from "../assets/logo.png";
 
 export default function VerifyOtp({ setIsLoggedIn }) {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
   const [fadeIn, setFadeIn] = useState(false);
-  const [resendTimer, setResendTimer] = useState(30); // 30s cooldown
+  const [resendTimer, setResendTimer] = useState(30);
 
   useEffect(() => {
     setFadeIn(true);
@@ -14,29 +15,60 @@ export default function VerifyOtp({ setIsLoggedIn }) {
 
   useEffect(() => {
     if (resendTimer > 0) {
-      const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
+      const timer = setTimeout(() => setResendTimer((prev) => prev - 1), 1000);
       return () => clearTimeout(timer);
     }
   }, [resendTimer]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!otp) {
-      alert("Please enter the OTP.");
+    const email = localStorage.getItem("pendingEmail");
+    const name = localStorage.getItem("pendingName");
+    const phone = localStorage.getItem("pendingPhone");
+    const password = localStorage.getItem("pendingPassword");
+
+    if (!otp || !email || !name || !phone || !password) {
+      alert("Missing information. Please try again.");
       return;
     }
 
-    // ✅ OTP verified (fake flow)
-    alert("OTP Verified ✅");
-    setIsLoggedIn(true);
-    navigate("/home");
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/verify-otp", {
+        name,
+        email,
+        phone,
+        password,
+        otp,
+      });
+
+      if (res.data.success) {
+        alert("🎉 Signup complete!");
+        localStorage.setItem("token", res.data.token);
+        setIsLoggedIn(true);
+
+        // 🧹 Clean localStorage
+        localStorage.removeItem("pendingEmail");
+        localStorage.removeItem("pendingName");
+        localStorage.removeItem("pendingPhone");
+        localStorage.removeItem("pendingPassword");
+
+        navigate("/login");
+      } else {
+        alert(res.data.message || "OTP verification failed.");
+      }
+    } catch (err) {
+      console.error("OTP verify error:", err.response?.data || err.message);
+      alert("Something went wrong. Try again.");
+    }
   };
 
   const handleResend = () => {
     if (resendTimer > 0) return;
+
     alert("OTP resent ✅");
     setResendTimer(30);
+    // Optional: Call resend OTP API here if needed
   };
 
   return (
