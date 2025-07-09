@@ -22,18 +22,17 @@ import Subscription from "./pages/Subscription";
 import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 
+// ✅ Wrapper to access location and manage layout
 function AppWrapper() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem("token")
+  );
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
-
-  console.log("App rendered | isLoggedIn:", isLoggedIn);
+    setIsLoggedIn(!!token);
+  }, [location.pathname]);
 
   const hideLayoutPaths = [
     "/",
@@ -47,11 +46,13 @@ function AppWrapper() {
 
   return (
     <>
+      {/* ✅ Navbar (only when logged in and not on auth pages) */}
       {isLoggedIn && !hideLayout && (
         <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       )}
 
       <Routes>
+        {/* ✅ Public Routes */}
         <Route
           path="/"
           element={!isLoggedIn ? <Landing /> : <Navigate to="/home" />}
@@ -88,12 +89,18 @@ function AppWrapper() {
         />
         <Route
           path="/forgot-password"
-          element={!isLoggedIn ? <ForgotPassword /> : <Navigate to="/home" />}
+          element={
+            !isLoggedIn ? <ForgotPassword /> : <Navigate to="/home" />
+          }
         />
         <Route
           path="/reset-password"
-          element={!isLoggedIn ? <ResetPassword /> : <Navigate to="/home" />}
+          element={
+            !isLoggedIn ? <ResetPassword /> : <Navigate to="/home" />
+          }
         />
+
+        {/* ✅ Private Routes */}
         <Route
           path="/home"
           element={isLoggedIn ? <Home /> : <Navigate to="/" />}
@@ -110,10 +117,13 @@ function AppWrapper() {
           path="/admin/subscription"
           element={isLoggedIn ? <AdminSubscription /> : <Navigate to="/" />}
         />
+
+        {/* ✅ Always public blog routes */}
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/blog/:id" element={<BlogDetail />} />
       </Routes>
 
+      {/* ✅ Footer */}
       {isLoggedIn && !hideLayout && <Footer />}
     </>
   );

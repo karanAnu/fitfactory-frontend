@@ -121,14 +121,13 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
             )
           )}
 
-          {isLoggedIn && (
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-4"
-            >
-              Logout
-            </button>
-          )}
+          {/* ✅ Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-4"
+          >
+            Logout
+          </button>
         </div>
 
         {/* Mobile Toggle */}
@@ -173,17 +172,16 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
               )
             )}
 
-            {isLoggedIn && (
-              <button
-                onClick={() => {
-                  handleLogout();
-                  setMenuOpen(false);
-                }}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-              >
-                Logout
-              </button>
-            )}
+            {/* ✅ Logout in Mobile */}
+            <button
+              onClick={() => {
+                handleLogout();
+                setMenuOpen(false);
+              }}
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+            >
+              Logout
+            </button>
           </div>
         </div>
       )}
