@@ -67,6 +67,13 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
     return location.pathname === href;
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    navigate("/");
+  };
+
   return (
     <nav className="bg-black text-white shadow-md fixed top-0 left-0 w-full z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -113,15 +120,15 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
               </Link>
             )
           )}
-          <button
-            onClick={() => {
-              setIsLoggedIn(false);
-              navigate("/");
-            }}
-            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-4"
-          >
-            Logout
-          </button>
+
+          {isLoggedIn && (
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-4"
+            >
+              Logout
+            </button>
+          )}
         </div>
 
         {/* Mobile Toggle */}
@@ -165,16 +172,18 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                 </Link>
               )
             )}
-            <button
-              onClick={() => {
-                setMenuOpen(false);
-                setIsLoggedIn(false);
-                navigate("/");
-              }}
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-            >
-              Logout
-            </button>
+
+            {isLoggedIn && (
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMenuOpen(false);
+                }}
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Logout
+              </button>
+            )}
           </div>
         </div>
       )}

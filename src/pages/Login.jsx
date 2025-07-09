@@ -12,6 +12,13 @@ export default function Login({ setIsLoggedIn }) {
 
   useEffect(() => {
     setFadeIn(true);
+
+    // ✅ If already logged in, redirect to home
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+      navigate("/home");
+    }
   }, []);
 
   const handleChange = (e) => {
@@ -36,9 +43,10 @@ export default function Login({ setIsLoggedIn }) {
         password,
       });
 
-      if (res.data.success) {
+      if (res.data.success && res.data.token) {
         const { token, user } = res.data;
 
+        // ✅ Store token and user
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
