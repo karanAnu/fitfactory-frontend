@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "../assets/logo.png";
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 export default function Login({ setIsLoggedIn }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -29,7 +31,7 @@ export default function Login({ setIsLoggedIn }) {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await axios.post(`${API_BASE}/api/auth/login`, {
         email,
         password,
       });
@@ -37,7 +39,6 @@ export default function Login({ setIsLoggedIn }) {
       if (res.data.success) {
         const { token, user } = res.data;
 
-        // ✅ Save to localStorage
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 

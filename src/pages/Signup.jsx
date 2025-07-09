@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "../assets/logo.png";
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 export default function Signup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -34,12 +36,11 @@ export default function Signup() {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/signup", formData);
+      const response = await axios.post(`${API_BASE}/api/auth/signup`, formData);
 
       if (response.data.success) {
         alert("OTP sent to your email ✅");
 
-        // ✅ Save all required data in localStorage
         localStorage.setItem("pendingName", name);
         localStorage.setItem("pendingPhone", phone);
         localStorage.setItem("pendingEmail", email);
